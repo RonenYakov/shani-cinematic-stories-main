@@ -109,6 +109,25 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Mobile scrolling optimizations */
+@media (max-width: 768px) {
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    overscroll-behavior-x: contain;
+  }
+  
+  /* Smooth momentum scrolling for mobile */
+  .scrollbar-hide {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+}
+
 /* Typography System */
 .heading-xl {
   font-family: 'Playfair Display', serif;

@@ -114,7 +114,8 @@ const BrandsVideoCarousel = () => {
                     muted
                     loop
                     playsInline
-                    preload={isMobile ? "metadata" : "auto"}
+                    preload="metadata"
+                    // poster will be added when assets are optimized
                     ref={(el) => { videoRefs.current[index] = el; }}
                   />
                 )}
@@ -136,21 +137,44 @@ const BrandsVideoCarousel = () => {
           </div>
         </div>
       </div>
-      {/* Lightbox Viewer */}
+      {/* Fullscreen Lightbox Viewer */}
       <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
-        <DialogContent className="max-w-5xl p-0 bg-transparent border-0">
-          <div className="relative w-full">
-            {activeItem?.type === 'image' ? (
-              <img src={activeItem.src} alt={activeItem.title} className="w-full h-full object-contain" />
-            ) : (
-              <video
-                src={activeItem?.src}
-                className="w-full h-full"
-                controls
-                autoPlay
-                playsInline
-              />
-            )}
+        <DialogContent className="max-w-none w-screen h-screen p-0 bg-black border-0 m-0">
+          <div 
+            className="relative w-full h-full flex items-center justify-center"
+            onClick={() => setLightboxOpen(false)} // Click outside to close
+          >
+            {/* Close button - larger for mobile */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setLightboxOpen(false);
+              }}
+              className="absolute top-4 right-4 z-50 text-white text-2xl bg-black/50 rounded-full w-12 h-12 flex items-center justify-center hover:bg-black/70 transition-colors touch-manipulation"
+              aria-label="Close video"
+            >
+              ✕
+            </button>
+            
+            {/* Additional close area for mobile - tap anywhere */}
+            <div className="absolute top-0 left-0 w-full h-16 z-40" onClick={() => setLightboxOpen(false)} />
+            
+            <div 
+              className="relative max-w-full max-h-full"
+              onClick={(e) => e.stopPropagation()} // Prevent closing when clicking video
+            >
+              {activeItem?.type === 'image' ? (
+                <img src={activeItem.src} alt={activeItem.title} className="max-w-full max-h-full object-contain" />
+              ) : (
+                <video
+                  src={activeItem?.src}
+                  className="max-w-full max-h-full object-contain"
+                  controls
+                  autoPlay
+                  playsInline
+                />
+              )}
+            </div>
           </div>
         </DialogContent>
       </Dialog>

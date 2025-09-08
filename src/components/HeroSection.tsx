@@ -16,15 +16,38 @@ const HeroSection = () => {
   };
   const isMobile = useIsMobile();
   return <section className="relative min-h-screen flex items-center justify-center overflow-hidden hero">
-      {/* Background video (replace src with your file/URL) */}
+      {/* Background image first, then video when loaded */}
+      <div 
+        className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: 'url(/story1.jpg)' }}
+      />
+      
+      {/* Video loads in background and replaces image when ready */}
       <video
-        className="absolute inset-0 w-full h-full object-cover"
-        autoPlay={!isMobile}
+        className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
+        autoPlay
         muted
         loop
         playsInline
-        preload={isMobile ? "metadata" : "auto"}
-        src="/video-glam.mov" /* Insert your video file name or URL here */
+        preload="metadata"
+        src="/video-glam.mov"
+        style={{ opacity: 0 }} // Start invisible
+        onCanPlay={(e) => {
+          // Show video smoothly when ready
+          const video = e.currentTarget;
+          video.style.opacity = '1';
+          video.play().catch(() => {});
+        }}
+        onLoadedData={(e) => {
+          // Backup trigger in case canPlay doesn't fire
+          setTimeout(() => {
+            const video = e.currentTarget;
+            if (video.style.opacity === '0') {
+              video.style.opacity = '1';
+              video.play().catch(() => {});
+            }
+          }, 1000);
+        }}
       />
 
       {/* Soft gradient overlay for readability */}
