@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useWheelSnapScroll } from "@/hooks/useWheelSnapScroll";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const BrandsVideoCarousel = () => {
   const [hoveredVideo, setHoveredVideo] = useState<string | null>(null);
@@ -36,6 +37,7 @@ const BrandsVideoCarousel = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   useWheelSnapScroll(containerRef, ".brand-card");
 
+  const isMobile = useIsMobile();
   return (
     <section id="videos-brands" dir="rtl" className="section-padding relative overflow-hidden text-right bg-[#010407]">
       {/* Rich, premium background accents */}
@@ -108,10 +110,11 @@ const BrandsVideoCarousel = () => {
                   <video
                     src={item.src}
                     className="absolute inset-0 w-full h-full object-cover"
-                    autoPlay
+                    autoPlay={!isMobile}
                     muted
                     loop
                     playsInline
+                    preload={isMobile ? "metadata" : "auto"}
                     ref={(el) => { videoRefs.current[index] = el; }}
                   />
                 )}

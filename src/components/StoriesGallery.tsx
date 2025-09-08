@@ -27,9 +27,10 @@ const StoriesGallery = () => {
     "/story1.jpg",
     "/story2.jpg",
     "/story3.JPG",
-    "/story9.jpg",
+  
     "/story7.JPG",
     "/story6.jpg",
+      "/story9.jpg",
      "/story15.jpg",
     "/story11.jpg",
     "/story12.JPG", 

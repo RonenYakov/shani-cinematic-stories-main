@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useWheelSnapScroll } from "@/hooks/useWheelSnapScroll";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const WeddingsVideoGallery = () => {
   const [hoveredVideo, setHoveredVideo] = useState<string | null>(null);
@@ -18,7 +19,7 @@ const WeddingsVideoGallery = () => {
 
   const srcFor = (file: string) => weddingMap[`/src/assets/weddings/${file}`] as string;
 
-  const weddingMedia = [ 
+  const weddingMedia = ([ 
     { file: 'סושיאל חתונה.mov',title: 'סושיאל חתונה', type: 'video' as const },
     { file: 'SAVE THE DATE-W.mov', title: 'Save the Date', type: 'video' as const },
     {file:'proposel.mp4',title:'הצעה', type: 'video' as const },
@@ -27,11 +28,12 @@ const WeddingsVideoGallery = () => {
     { file: 'רגעים קטנים חתונה-W.mov', title: 'רגעים קטנים', type: 'video' as const },
     { file: 'מסיבת אירוסין-W.mov', title: 'מסיבת אירוסין', type: 'video' as const },
     {file:'save the date.mov',title:'Save the Date', type: 'video' as const },
-     ].map(m => ({ ...m, src: srcFor(m.file) }));
+     ] as Array<{ file: string; title: string; type: 'image' | 'video' }>).map(m => ({ ...m, src: srcFor(m.file) }));
 
   // Mouse-wheel snap between items when hovered
   useWheelSnapScroll(containerRef, ".media-card");
 
+  const isMobile = useIsMobile();
   return (
     <section id="videos-warm" dir="rtl" className="section-padding relative text-right">
       <div className="max-w-7xl mx-auto relative px-6">
@@ -52,7 +54,7 @@ const WeddingsVideoGallery = () => {
           transition={{ duration: 1, delay: 0.2 }}
           viewport={{ once: true }}
         >
-          בעזרתי כל אירוע שלכם יראה כמו סרט הוליוודי
+          בעזרתי כל אירוע שלכם יראה כמו סרט
         </motion.p>
 
         {/* Smooth Horizontal Reel with snap + hover scale */}
@@ -102,13 +104,15 @@ const WeddingsVideoGallery = () => {
                   <video
                     src={item.src}
                     className="absolute inset-0 w-full h-full object-cover"
-                    autoPlay
+                    autoPlay={!isMobile}
                     loop
                     muted
                     playsInline
-                    preload="auto"
+                    preload={isMobile ? "metadata" : "auto"}
                     onCanPlay={(e) => {
-                      try { (e.currentTarget as HTMLVideoElement).play(); } catch {}
+                      if (!isMobile) {
+                        try { (e.currentTarget as HTMLVideoElement).play(); } catch {}
+                      }
                     }}
                     aria-hidden="true"
                     ref={(el) => { videoRefs.current[index] = el; }}

@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { useIsMobile } from "@/hooks/use-mobile";
 const HeroSection = () => {
   const scrollToWork = () => {
     const workSection = document.getElementById('videos-warm');
@@ -13,15 +14,16 @@ const HeroSection = () => {
       behavior: 'smooth'
     });
   };
+  const isMobile = useIsMobile();
   return <section className="relative min-h-screen flex items-center justify-center overflow-hidden hero">
       {/* Background video (replace src with your file/URL) */}
       <video
         className="absolute inset-0 w-full h-full object-cover"
-        autoPlay
+        autoPlay={!isMobile}
         muted
         loop
         playsInline
-        preload="metadata"
+        preload={isMobile ? "metadata" : "auto"}
         src="/video-glam.mov" /* Insert your video file name or URL here */
       />
 
